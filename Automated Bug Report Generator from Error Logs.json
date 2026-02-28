@@ -1,0 +1,119 @@
+{
+  "name": "Automated Bug Report Generator from Error Logs",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "You are a Senior QA Engineer with expertise in software testing and bug reporting.\n\nYour task is to analyze the provided error log data and generate a structured, professional bug report.\n\n**STRICT RULES:**\n- Use ONLY the log data provided. Do NOT invent, assume, or hallucinate any information.\n- If any field cannot be determined from the log data, mark it as [UNKNOWN].\n- Do not guess steps to reproduce if they are not evident from the logs.\n- Be precise and technical in your descriptions.\n\n**OUTPUT FORMAT — Follow this exact structure:**\n\n---\n## 🐛 Bug Report\n\n**Bug ID:** AUTO-[timestamp or hash from log if available, otherwise UNKNOWN]\n\n**Title:** [Concise, descriptive title summarizing the error]\n\n**Severity:** [Critical / High / Medium / Low — based on error impact]\n- Critical: System crash, data loss, security breach\n- High: Major feature broken, no workaround\n- Medium: Feature partially broken, workaround exists\n- Low: Minor issue, cosmetic, or edge case\n\n**Environment:**\n- Service/Module: [Extract from log]\n- Timestamp: [Extract from log]\n- Server/Host: [Extract from log or UNKNOWN]\n- Version/Build: [Extract from log or UNKNOWN]\n\n**Description:**\n[2-3 sentence summary of what the error is and its potential impact]\n\n**Steps to Reproduce:**\n1. [Step extracted or inferred from log sequence]\n2. [Step extracted or inferred from log sequence]\n3. [If not determinable: \"Steps cannot be determined from log data alone. Manual investigation required.\"]\n\n**Expected Result:**\n[What should have happened based on the operation described in logs]\n\n**Actual Result:**\n[What actually happened — the error/failure from the log]\n\n**Error Details:**\n```\n[Paste the key error message/stack trace from the log]\n```\n\n**Possible Root Cause:**\n[Only if clearly suggested by the log data. Otherwise: \"Root cause requires further investigation.\"]\n\n**Recommended Next Steps:**\n- [Actionable investigation or fix suggestions based on log evidence]\n---\n\nAnalyze the following error log and generate the bug report:"
+        }
+      },
+      "id": "0aaa5a5d-6e7f-4de4-aeac-f75a84f73639",
+      "name": "AI Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        -112,
+        -128
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "83909312-f246-4728-987b-4a6225451455",
+      "name": "When chat message received",
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -400,
+        -128
+      ],
+      "webhookId": "bug-report-chat-trigger"
+    },
+    {
+      "parameters": {
+        "model": "llama-3.3-70b-versatile",
+        "options": {
+          "maxTokensToSample": 4096,
+          "temperature": 0.2
+        }
+      },
+      "id": "8ce30f13-9afa-46ae-8c50-e9d991047a0a",
+      "name": "Groq Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        -208,
+        96
+      ],
+      "notesInFlow": false,
+      "alwaysOutputData": false,
+      "credentials": {
+        "groqApi": {
+          "id": "FtcYxcZhkJvCHW8c",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -48,
+        80
+      ],
+      "id": "4432d533-144f-4519-875e-38bd7468a86c",
+      "name": "Simple Memory"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "88547a5f-3bae-4e7a-b0cd-f826a127d41d",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "3a942093f907409c7864042131157fd2829b16251d99df18481f6ffcfa8a567b"
+  },
+  "id": "q3PFRTI60Qti8Oia",
+  "tags": []
+}
