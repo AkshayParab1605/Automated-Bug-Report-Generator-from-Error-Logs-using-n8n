@@ -8,7 +8,7 @@ An n8n workflow that automatically generates structured, professional bug report
 
 QA teams often receive daily error logs from monitoring systems and manually read through them to write bug reports — a repetitive and time-consuming process. This workflow automates that by using an LLM to analyze error logs and produce well-formatted bug reports instantly.
 
----
+--
 
 ## 🔄 Workflow Overview
 
