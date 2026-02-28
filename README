@@ -1,0 +1,127 @@
+# 🐛 Automated Bug Report Generator from Error Logs using n8n
+
+An n8n workflow that automatically generates structured, professional bug reports from application error logs using AI (Groq LLM).
+
+---
+
+## 📌 Problem Statement
+
+QA teams often receive daily error logs from monitoring systems and manually read through them to write bug reports — a repetitive and time-consuming process. This workflow automates that by using an LLM to analyze error logs and produce well-formatted bug reports instantly.
+
+---
+
+## 🔄 Workflow Overview
+
+```
+[Chat Trigger] → [AI Agent + System Prompt] → [Groq LLM (llama-3.3-70b-versatile)] → [Structured Bug Report Output]
+```
+
+| Node | Type | Purpose |
+|------|------|---------|
+| **When chat message received** | Chat Trigger | Accepts error log text as input via chat interface |
+| **AI Agent** | LangChain Agent | Processes log using a QA Engineer system prompt |
+| **Groq Chat Model** | LLM Sub-node | Uses `llama-3.3-70b-versatile` for fast, free inference |
+
+---
+
+## 📋 Bug Report Output Format
+
+The workflow generates reports with the following structure:
+
+- **Bug ID** — Auto-generated from log data
+- **Title** — Concise summary of the error
+- **Severity** — Critical / High / Medium / Low (with defined criteria)
+- **Environment** — Service, timestamp, host, version
+- **Description** — 2-3 sentence summary
+- **Steps to Reproduce** — Extracted or inferred from log sequence
+- **Expected Result** — What should have happened
+- **Actual Result** — What actually happened (the error)
+- **Error Details** — Key error message / stack trace
+- **Possible Root Cause** — Only if evident from logs
+- **Recommended Next Steps** — Actionable suggestions
+
+---
+
+## 🛡️ Anti-Hallucination Safeguard
+
+The system prompt enforces strict rules:
+
+> *"Use ONLY the log data provided. Do NOT invent, assume, or hallucinate any information. If any field cannot be determined from the log data, mark it as [UNKNOWN]."*
+
+Temperature is set to **0.2** for consistent, factual output.
+
+---
+
+## 🚀 Setup Instructions
+
+### Prerequisites
+
+- [n8n](https://n8n.io/) installed (self-hosted or cloud)
+- A free [Groq API key](https://console.groq.com/)
+
+### Steps
+
+1. **Download** the `Bug_Report_Generator_Workflow.json` file from this repository
+2. **Import** into n8n: Go to **Workflows → Import from File** and select the JSON file
+3. **Configure Groq credentials:**
+   - Open the **Groq Chat Model** node
+   - Click on **Credentials → Create New**
+   - Paste your Groq API key
+4. **Activate** the workflow
+5. **Test it:** Click the **Chat** button in n8n and paste any error log text
+
+---
+
+## 💡 Example Usage
+
+### Sample Input (Error Log)
+
+```
+[2026-02-28 09:15:42] ERROR PaymentService - Transaction failed for user_id=78432
+  Exception: java.sql.SQLTransientConnectionException: HikariPool-1 - Connection is not available, request timed out after 30000ms
+  at com.zaxxer.hikari.pool.HikariPool.createTimeoutException(HikariPool.java:695)
+  at com.payment.service.ProcessPayment.execute(ProcessPayment.java:142)
+  Database: payments_db_primary
+  Active connections: 50/50
+  Environment: production-us-east-1
+```
+
+### Sample Output
+
+The AI Agent will generate a complete bug report with title like *"Payment Transaction Failure Due to Database Connection Pool Exhaustion"*, severity rated as **Critical**, and actionable next steps like investigating connection pool sizing and checking for connection leaks.
+
+---
+
+## 🛠️ Customization Ideas
+
+- **Add a Slack/Email node** to send bug reports to your team channel automatically
+- **Connect to Jira/Linear** to create tickets directly from generated reports
+- **Add a Google Sheets node** to log all generated bug reports in a spreadsheet
+- **Swap the LLM** — replace Groq with OpenAI, Anthropic, or Ollama
+
+---
+
+## 📁 Repository Structure
+
+```
+├── README.md
+└── Bug_Report_Generator_Workflow.json
+```
+
+---
+
+## 📄 License
+
+This project is open source and available under the [MIT License](LICENSE).
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Feel free to open an issue or submit a pull request if you have improvements or ideas.
+
+---
+
+## ⭐ Support
+
+If you found this useful, please consider giving this repo a ⭐ — it helps others discover it!
