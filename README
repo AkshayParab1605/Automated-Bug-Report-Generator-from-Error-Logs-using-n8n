@@ -108,20 +108,3 @@ The AI Agent will generate a complete bug report with title like *"Payment Trans
 └── Bug_Report_Generator_Workflow.json
 ```
 
----
-
-## 📄 License
-
-This project is open source and available under the [MIT License](LICENSE).
-
----
-
-## 🤝 Contributing
-
-Contributions are welcome! Feel free to open an issue or submit a pull request if you have improvements or ideas.
-
----
-
-## ⭐ Support
-
-If you found this useful, please consider giving this repo a ⭐ — it helps others discover it!
